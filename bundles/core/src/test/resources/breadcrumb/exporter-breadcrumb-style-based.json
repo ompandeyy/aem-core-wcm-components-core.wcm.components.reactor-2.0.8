@@ -1,0 +1,10 @@
+{
+    "items": [
+        {
+            "url"   : "/content/breadcrumb/women/shirts/devi-sleeveless-shirt.html",
+            "title" : "Devi Sleeveless Shirt",
+            "active": true
+        }
+    ],
+    ":type": "core/wcm/components/breadcrumb"
+}
