@@ -57,6 +57,7 @@ public class ImageImpl extends com.adobe.cq.wcm.core.components.internal.models.
         boolean altValueFromDAM = properties.get(PN_ALT_VALUE_FROM_DAM, currentStyle.get(PN_ALT_VALUE_FROM_DAM, true));
         boolean titleValueFromDAM = properties.get(PN_TITLE_VALUE_FROM_DAM, currentStyle.get(PN_TITLE_VALUE_FROM_DAM, true));
         displayPopupTitle = properties.get(PN_DISPLAY_POPUP_TITLE, currentStyle.get(PN_DISPLAY_POPUP_TITLE, true));
+        String imageName = getImageNameFromDam();
         if (StringUtils.isNotEmpty(fileReference)) {
             // the image is coming from DAM
             final Resource assetResource = request.getResourceResolver().getResource(fileReference);
@@ -91,7 +92,11 @@ public class ImageImpl extends com.adobe.cq.wcm.core.components.internal.models.
 
             srcUriTemplate = baseResourcePath + DOT + selector +
                     SRC_URI_TEMPLATE_WIDTH_VAR + DOT + extension +
-                    (inTemplate ? templateRelativePath : "") + (lastModifiedDate > 0 ? "/" + lastModifiedDate + DOT + extension : "");
+                    (inTemplate ? templateRelativePath : "")
+                    + (lastModifiedDate > 0
+                            ? "/" + lastModifiedDate + (StringUtils.isNotBlank(imageName) ? "/" + imageName : "") + DOT
+                                    + extension
+                            : "");
 
             // if content policy delegate path is provided pass it to the image Uri
             String policyDelegatePath = request.getParameter(CONTENT_POLICY_DELEGATE_PATH);
