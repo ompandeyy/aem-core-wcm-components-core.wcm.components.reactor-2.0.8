@@ -15,6 +15,8 @@
  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 package com.adobe.cq.wcm.core.components.internal.models.v1;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +63,7 @@ import com.day.cq.wcm.api.PageManager;
 import com.day.cq.wcm.api.Template;
 import com.day.cq.wcm.api.designer.Style;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FilenameUtils;
 
 @Model(adaptables = SlingHttpServletRequest.class, adapters = {Image.class, ComponentExporter.class}, resourceType = ImageImpl.RESOURCE_TYPE)
 @Exporter(name = ExporterConstants.SLING_MODEL_EXPORTER_NAME, extensions = ExporterConstants.SLING_MODEL_EXTENSION)
@@ -206,11 +209,15 @@ public class ImageImpl implements Image {
                 baseResourcePath = resource.getPath();
             }
             baseResourcePath = resource.getResourceResolver().map(request, baseResourcePath);
+            String imageName = getImageNameFromDam();
             for (Integer width : supportedRenditionWidths) {
                 smartImages[index] = baseResourcePath + DOT +
                         selector + DOT + width + DOT + extension +
                         (inTemplate ? Text.escapePath(templateRelativePath) : "") +
-                        (lastModifiedDate > 0 ? "/" + lastModifiedDate + DOT + extension : "");
+                        (lastModifiedDate > 0
+                                ? "/" + lastModifiedDate + (StringUtils.isNotBlank(imageName) ? "/" + imageName : "")
+                                        + DOT + extension
+                                : "");
                 smartSizes[index] = width;
                 index++;
             }
@@ -220,8 +227,11 @@ public class ImageImpl implements Image {
             } else {
                 src += extension;
             }
-            src += (inTemplate ? Text.escapePath(templateRelativePath) : "") + (lastModifiedDate > 0 ? "/" + lastModifiedDate + DOT +
-                    extension : "");
+            src += (inTemplate ? Text.escapePath(templateRelativePath) : "")
+                    + (lastModifiedDate > 0
+                            ? "/" + lastModifiedDate + (StringUtils.isNotBlank(imageName) ? "/" + imageName : "") + DOT
+                                    + extension
+                            : "");
             if (!isDecorative) {
                 if (StringUtils.isNotEmpty(linkURL)) {
                     linkURL = Utils.getURL(request, pageManager, linkURL);
@@ -234,6 +244,40 @@ public class ImageImpl implements Image {
         }
     }
 
+    /**
+     * Extracts the image name from the DAM resource
+     *
+     * @return image name from DAM
+     */
+    protected String getImageNameFromDam() {
+        String imageName = "";
+        Resource damResource = this.request.getResourceResolver().getResource(this.fileReference);
+        if (damResource != null) {
+            Asset asset = (Asset) damResource.adaptTo(Asset.class);
+            imageName = asset != null ? StringUtils.trimToNull(asset.getName()) : "";
+        }
+        return getSeoFriendlyName(FilenameUtils.getBaseName(imageName));
+    }
+
+    /**
+     * Content editors can store DAM assets with white spaces in the name, this
+     * method makes the asset name SEO friendly, Translates the string into
+     * {@code application/x-www-form-urlencoded} format using {@code utf-8} encoding
+     * scheme.
+     *
+     * @param imageName
+     * @return name of the asset without extension
+     */
+    protected String getSeoFriendlyName(String imageName) {
+        String seoFriendlyName = imageName.replaceAll("[\\ _]", "-").toLowerCase();
+        try {
+            seoFriendlyName = URLEncoder.encode(seoFriendlyName, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error(String.format("The Character Encoding is not supported.", new Object[0]));
+        }
+        return seoFriendlyName;
+    }
+   
     @Override
     public String getSrc() {
         return src;

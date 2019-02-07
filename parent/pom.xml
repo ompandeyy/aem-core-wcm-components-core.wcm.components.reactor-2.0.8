@@ -19,7 +19,7 @@
     <groupId>com.adobe.cq</groupId>
     <artifactId>core.wcm.components.parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.8</version>
+    <version>2.0.8-pr419</version>
 
     <name>Adobe Experience Manager Core WCM Components Parent</name>
 

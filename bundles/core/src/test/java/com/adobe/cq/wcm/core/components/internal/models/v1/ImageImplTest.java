@@ -72,15 +72,15 @@ public class ImageImplTest extends AbstractImageTest {
         assertEquals(IMAGE_TITLE_ALT, image.getAlt());
         assertEquals(IMAGE_TITLE_ALT, image.getTitle());
         assertEquals(IMAGE_FILE_REFERENCE, image.getFileReference());
-        String expectedJson = "{\"smartImages\":[\"/core/content/test/_jcr_content/root/image0." + selector + ".600.png/1490005239000.png\"," +
-                "\"/core/content/test/_jcr_content/root/image0." + selector + ".700.png/1490005239000.png\"," +
+        String expectedJson = "{\"smartImages\":[\"/core/content/test/_jcr_content/root/image0." + selector + ".600.png/1490005239000/adobe-systems-logo-and-wordmark.png\"," +
+                "\"/core/content/test/_jcr_content/root/image0." + selector + ".700.png/1490005239000/adobe-systems-logo-and-wordmark.png\"," +
                 "\"/core/content/test/_jcr_content/root/image0" +
-                "." + selector + ".800.png/1490005239000.png\",\"/core/content/test/_jcr_content/root/image0." + selector + ".2000.png/1490005239000.png\", " +
-                "\"/core/content/test/_jcr_content/root/image0." + selector + ".2500.png/1490005239000.png\"],\"smartSizes\":[600,700,800,2000,2500],\"lazyEnabled\":true}";
+                "." + selector + ".800.png/1490005239000/adobe-systems-logo-and-wordmark.png\",\"/core/content/test/_jcr_content/root/image0." + selector + ".2000.png/1490005239000/adobe-systems-logo-and-wordmark.png\", " +
+                "\"/core/content/test/_jcr_content/root/image0." + selector + ".2500.png/1490005239000/adobe-systems-logo-and-wordmark.png\"],\"smartSizes\":[600,700,800,2000,2500],\"lazyEnabled\":true}";
         compareJSON(expectedJson, image.getJson());
         assertFalse(image.displayPopupTitle());
         assertEquals(CONTEXT_PATH + "/content/test-image.html", image.getLink());
-        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1490005239000.png", image.getSrc());
+        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1490005239000/adobe-systems-logo-and-wordmark.png", image.getSrc());
         Utils.testJSONExport(image, Utils.getTestExporterJSONPath(testBase, IMAGE0_PATH));
     }
 
@@ -109,7 +109,7 @@ public class ImageImplTest extends AbstractImageTest {
         assertNull("Did not expect a title for this image.", image.getTitle());
         assertFalse("Image should not display a caption popup.", image.displayPopupTitle());
         assertNull("Did not expect a link for this image, since it's marked as decorative.", image.getLink());
-        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1494867377756.png", image.getSrc());
+        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1494867377756/adobe-systems-logo-and-wordmark.png", image.getSrc());
         compareJSON(
                 "{\"" + Image.JSON_SMART_IMAGES + "\":[], \"" + Image.JSON_SMART_SIZES + "\":[], \"" + Image.JSON_LAZY_ENABLED +
                         "\":true}",
@@ -128,7 +128,7 @@ public class ImageImplTest extends AbstractImageTest {
     public void testExtensionDeterminedFromMimetype() {
         String escapedResourcePath = IMAGE18_PATH.replace("jcr:content", "_jcr_content");
         Image image = getImageUnderTest(IMAGE18_PATH);
-        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1490005239000.png", image.getSrc());
+        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1490005239000/adobe-systems-logo-and-wordmark.png", image.getSrc());
         Utils.testJSONExport(image, Utils.getTestExporterJSONPath(testBase, IMAGE18_PATH));
     }
 
@@ -136,11 +136,11 @@ public class ImageImplTest extends AbstractImageTest {
     public void testImageCacheKiller() {
         String escapedResourcePath = IMAGE4_PATH.replace("jcr:content", "_jcr_content");
         Image image = getImageUnderTest(IMAGE4_PATH);
-        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1494867377756.png", image.getSrc());
+        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1494867377756/adobe-systems-logo-and-wordmark.png", image.getSrc());
 
         escapedResourcePath = IMAGE15_PATH.replace("jcr:content", "_jcr_content");
         image = getImageUnderTest(IMAGE15_PATH);
-        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1494867377756.png", image.getSrc());
+        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".png/1494867377756/adobe-systems-logo-and-wordmark.png", image.getSrc());
         Utils.testJSONExport(image, Utils.getTestExporterJSONPath(testBase, IMAGE15_PATH));
     }
 
@@ -148,7 +148,7 @@ public class ImageImplTest extends AbstractImageTest {
     public void testTIFFImage() {
         String escapedResourcePath = IMAGE16_PATH.replace("jcr:content", "_jcr_content");
         Image image = getImageUnderTest(IMAGE16_PATH);
-        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".jpeg/1500299989000.jpeg", image.getSrc());
+        assertEquals(CONTEXT_PATH + escapedResourcePath + "." + selector + ".jpeg/1500299989000/adobe-systems-logo-and-wordmark.jpeg", image.getSrc());
         Utils.testJSONExport(image, Utils.getTestExporterJSONPath(testBase, IMAGE16_PATH));
     }
 
@@ -161,17 +161,17 @@ public class ImageImplTest extends AbstractImageTest {
     @Test
     public void testImageFromTemplateStructure() {
         Image image = getImageUnderTest(TEMPLATE_IMAGE_PATH);
-        assertEquals(CONTEXT_PATH + "/content/test." + selector + ".png/structure/jcr%3acontent/root/image_template/1490005239000.png", image.getSrc());
+        assertEquals(CONTEXT_PATH + "/content/test." + selector + ".png/structure/jcr%3acontent/root/image_template/1490005239000/adobe-systems-logo-and-wordmark.png", image.getSrc());
         assertEquals(IMAGE_TITLE_ALT, image.getAlt());
         assertEquals(IMAGE_TITLE_ALT, image.getTitle());
         assertEquals(IMAGE_FILE_REFERENCE, image.getFileReference());
         String expectedJson = "{" +
                 "\"smartImages\":[" +
-                    "\"/core/content/test." + selector + ".600.png/structure/jcr%3acontent/root/image_template/1490005239000.png\"," +
-                    "\"/core/content/test." + selector + ".700.png/structure/jcr%3acontent/root/image_template/1490005239000.png\"," +
-                    "\"/core/content/test." + selector + ".800.png/structure/jcr%3acontent/root/image_template/1490005239000.png\"," +
-                    "\"/core/content/test." + selector + ".2000.png/structure/jcr%3acontent/root/image_template/1490005239000.png\"," +
-                    "\"/core/content/test." + selector + ".2500.png/structure/jcr%3acontent/root/image_template/1490005239000.png\"" +
+                    "\"/core/content/test." + selector + ".600.png/structure/jcr%3acontent/root/image_template/1490005239000/adobe-systems-logo-and-wordmark.png\"," +
+                    "\"/core/content/test." + selector + ".700.png/structure/jcr%3acontent/root/image_template/1490005239000/adobe-systems-logo-and-wordmark.png\"," +
+                    "\"/core/content/test." + selector + ".800.png/structure/jcr%3acontent/root/image_template/1490005239000/adobe-systems-logo-and-wordmark.png\"," +
+                    "\"/core/content/test." + selector + ".2000.png/structure/jcr%3acontent/root/image_template/1490005239000/adobe-systems-logo-and-wordmark.png\"," +
+                    "\"/core/content/test." + selector + ".2500.png/structure/jcr%3acontent/root/image_template/1490005239000/adobe-systems-logo-and-wordmark.png\"" +
                 "]," +
                 "\"smartSizes\":[600,700,800,2000,2500]," +
                 "\"lazyEnabled\":true" +
